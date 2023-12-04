@@ -25,17 +25,21 @@ export class MovieManager implements MediaManager {
   }
 
   async deleteMedia(id: number, name: string): Promise<void> {
-    const response = await fetch(`${this.buildBaseUrl()}/movie/${id}`, {
-      method: "DELETE",
-      headers: {
-        "X-Api-Key": this.apiKey,
-        "Content-Type": "application/json",
-      },
-    });
-    if (response.status !== 200) {
-      console.error(`Error deleting movie from Radarr: '${name}'`, response.statusText);
-    } else {
-      console.log(`Deleted movie from Radarr: '${name}'`);
+    try {
+      const response = await fetch(`${this.buildBaseUrl()}/movie/${id}`, {
+        method: "DELETE",
+        headers: {
+          "X-Api-Key": this.apiKey,
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.status !== 200) {
+        console.error(`Error deleting movie from Radarr: '${name}'`, response.statusText);
+      } else {
+        console.log(`Deleted movie from Radarr: '${name}'`);
+      }
+    } catch (e: unknown) {
+      console.error(`Error deleting movie from Radarr: '${name}'`, e);
     }
   }
 
