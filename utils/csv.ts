@@ -39,7 +39,7 @@ export async function parseCsvFile(filename: string): Promise<Csv> {
   csvRows.forEach((row) => {
     const media = rowToMedia(row, type);
 
-    const title = media.title;
+    const title = media.name;
     const existing = mediaMap.get(title);
     if (existing != null) {
       mediaMap.set(title, [...existing, media]);

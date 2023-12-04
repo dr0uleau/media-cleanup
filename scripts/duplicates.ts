@@ -1,6 +1,6 @@
-import { Media, MediaType } from "./media.ts";
-import { deleteMedia } from "./delete.ts";
-import { parseCsvFile } from "./csv.ts";
+import { Media, MediaType } from "../utils/media.ts";
+import { printDeleteMediaFileCommand } from "../utils/filesystem.ts";
+import { parseCsvFile } from "../utils/csv.ts";
 
 const filename = Deno.args[0];
 const { mediaMap, type } = await parseCsvFile(filename);
@@ -64,7 +64,7 @@ indeterminates.forEach((title: string) => {
 });
 
 if (indeterminates.size === 0) {
-  deleteMedia(deletes);
+  printDeleteMediaFileCommand(deletes);
 }
 
 const enum Dimension {

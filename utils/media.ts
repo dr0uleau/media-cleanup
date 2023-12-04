@@ -4,7 +4,9 @@ export enum MediaType {
 }
 
 export interface Media {
-  title: string;
+  skip: string | undefined;
+  year: string | undefined;
+  name: string;
   file: string;
   imdb_rating: string;
   size_in_GB: number;
@@ -17,7 +19,9 @@ export interface Media {
 
 export function rowToMedia(row: any, type: MediaType): Media {
   return {
-    title: row.title,
+    year: row.year,
+    skip: row.skip,
+    name: row.title,
     file: row.file,
     imdb_rating: row.imdb_rating,
     size_in_GB: +row.size_in_GB,
