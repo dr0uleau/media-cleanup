@@ -19,10 +19,7 @@ export class ShowManager implements MediaManager {
       throw Error("User, password, or apiKey not set");
     }
 
-    this.sonarr = new Sonarr(
-      `http://${this.user}:${this.password}@192.168.1.66:8989/`,
-      this.apiKey
-    );
+    this.sonarr = new Sonarr(`http://${this.user}:${this.password}@192.168.1.66:8989`, this.apiKey);
   }
 
   async deleteMedia(id: number, name: string): Promise<void> {
