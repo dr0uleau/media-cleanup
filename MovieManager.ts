@@ -1,10 +1,12 @@
 import { load } from "https://deno.land/std@0.208.0/dotenv/mod.ts";
-import { MediaManager, buildMediaName } from "./MediaManager.ts";
+import { MediaManager, getMediaFolderFromPath } from "./MediaManager.ts";
+import { MediaType } from "./utils/media.ts";
 
 export interface Movie {
   title: string;
   year: number;
   id: number;
+  path: string;
 }
 
 await load({ export: true });
@@ -48,18 +50,15 @@ export class MovieManager implements MediaManager {
 
     const movies = await this.getMovies();
     movies.forEach((movie) => {
-      const movieName = this.getMovieName(movie);
       const id = movie.id;
-      if (movieNameToIdMap.get(movieName)) throw Error(`Duplicate movie name: ${movieName}`);
-      if (!movieName || !id) throw Error(`Invalid movie: ${movieName} ${id}`);
-      movieNameToIdMap.set(movieName, id);
+      const movieFolder = getMediaFolderFromPath(movie.path, MediaType.MOVIE);
+      if (!movieFolder || !id) throw Error(`Invalid movie: ${movieFolder} ${id}`);
+
+      if (movieNameToIdMap.get(movieFolder)) throw Error(`Duplicate movie name: ${movieFolder}`);
+      movieNameToIdMap.set(movieFolder, id);
     });
 
     return movieNameToIdMap;
-  }
-
-  private getMovieName(movie: Movie): string {
-    return buildMediaName(movie.title, movie.year.toString());
   }
 
   private buildBaseUrl(): string {
@@ -77,3 +76,5 @@ export class MovieManager implements MediaManager {
     return (await response.json()) as Movie[];
   }
 }
+
+console.log(await new MovieManager().getMediaNameToIdMap());

@@ -2,12 +2,12 @@ import { existsSync } from "https://deno.land/std/fs/mod.ts";
 import { Media, MediaType } from "./media.ts";
 import { dryRunLog } from "./dryrun.ts";
 
-const LOCAL_PATH = "/home/daniel/media";
-const REMOTE_PATH = "/home/daniel/dropbox-crypt";
+export const LOCAL_PATH = "/home/daniel/media";
+export const REMOTE_PATH = "/home/daniel/dropbox-crypt";
 
 export function printDeleteMediaFileCommand(deletes: Media[]): void {
   deletes.forEach((media) => {
-    const path = buildFilePath(media);
+    const path = buildRemoteFilePath(media);
     const cmd = `rm "${path}"`;
     console.log(cmd);
   });
@@ -28,7 +28,7 @@ export function executeDeleteMediaFolder(media: Media, dryrun: boolean): void {
   }
 }
 
-function buildFilePath(media: Media): string {
+function buildRemoteFilePath(media: Media): string {
   const localPath = media.file.replace(LOCAL_PATH, "");
   const dropboxPath = REMOTE_PATH;
   return dropboxPath + localPath;

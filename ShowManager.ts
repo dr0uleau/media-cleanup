@@ -1,6 +1,7 @@
 import { ISeries, Sonarr } from "npm:@jc21/sonarr-api";
 import { load } from "https://deno.land/std@0.208.0/dotenv/mod.ts";
-import { MediaManager } from "./MediaManager.ts";
+import { MediaManager, getMediaFolderFromPath } from "./MediaManager.ts";
+import { MediaType } from "./utils/media.ts";
 
 await load({ export: true });
 
@@ -36,17 +37,14 @@ export class ShowManager implements MediaManager {
 
     const shows = await this.sonarr.shows();
     shows.forEach((show: ISeries) => {
-      const showName = this.getShowName(show);
       const id = show.id;
-      if (showNameToIdMap.get(showName)) throw Error(`Duplicate show name: ${showName}`);
-      if (!showName || !id) throw Error(`Invalid show: ${showName} ${id}`);
-      showNameToIdMap.set(showName, id);
+      const showFolder = getMediaFolderFromPath(show.path, MediaType.TV);
+
+      if (!showFolder || !id) throw Error(`Invalid show: ${showFolder} ${id}`);
+      if (showNameToIdMap.get(showFolder)) throw Error(`Duplicate show name: ${showFolder}`);
+      showNameToIdMap.set(showFolder, id);
     });
 
     return showNameToIdMap;
-  }
-
-  private getShowName(show: ISeries): string {
-    return show.title;
   }
 }
