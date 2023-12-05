@@ -14,11 +14,11 @@ export function printDeleteMediaFileCommand(deletes: Media[]): void {
 }
 
 export function executeDeleteMediaFolder(media: Media, dryrun: boolean): void {
-  if (!media.name || media.name.length < 2) throw Error(`Invalid media ${JSON.stringify(media)}`);
-
   const mediaFolder = media.type == MediaType.MOVIE ? "Movies" : "TV Shows";
   const localFile = media.file.replace(LOCAL_PATH + "/" + mediaFolder + "/", "");
   const localFolder = localFile.split("/")[0];
+  if (!localFolder || localFolder.length < 2) throw Error(`Invalid media ${JSON.stringify(media)}`);
+
   const remotePath = REMOTE_PATH + "/" + mediaFolder + "/" + localFolder + "/";
   if (existsSync(remotePath)) {
     if (!dryrun) Deno.removeSync(remotePath, { recursive: true });
