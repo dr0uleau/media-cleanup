@@ -17,12 +17,14 @@ export function executeDeleteMediaFolder(media: Media, dryrun: boolean): void {
   if (!media.name || media.name.length < 2) throw Error(`Invalid media ${JSON.stringify(media)}`);
 
   const mediaFolder = media.type == MediaType.MOVIE ? "Movies" : "TV Shows";
-  const path = REMOTE_PATH + "/" + mediaFolder + "/" + media.name + "/";
-  if (existsSync(path)) {
-    if (!dryrun) Deno.removeSync(path, { recursive: true });
-    console.log(`${dryRunLog(dryrun)}[FILESYSTEM] DELETED: ${path}`);
+  const localFile = media.file.replace(LOCAL_PATH + "/" + mediaFolder + "/", "");
+  const localFolder = localFile.split("/")[0];
+  const remotePath = REMOTE_PATH + "/" + mediaFolder + "/" + localFolder + "/";
+  if (existsSync(remotePath)) {
+    if (!dryrun) Deno.removeSync(remotePath, { recursive: true });
+    console.log(`${dryRunLog(dryrun)}[FILESYSTEM] DELETED: ${remotePath}`);
   } else {
-    console.log(`${dryRunLog(dryrun)}[FILESYSTEM] NOT FOUND: ${path}`);
+    console.log(`${dryRunLog(dryrun)}[FILESYSTEM] NOT FOUND: ${remotePath}`);
   }
 }
 
