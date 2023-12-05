@@ -14,9 +14,12 @@ export function printDeleteMediaFileCommand(deletes: Media[]): void {
 }
 
 export function executeDeleteMediaFolder(media: Media, dryrun: boolean): void {
-  const mediaFolder = media.type == MediaType.MOVIE ? "Movies" : "TV Shows";
-  const localFile = media.file.replace(LOCAL_PATH + "/" + mediaFolder + "/", "");
-  const localFolder = localFile.split("/")[0];
+  const mediaFolder = media.type == MediaType.TV ? "TV Shows" : "Movies";
+
+  const localFolder =
+    media.type == MediaType.TV
+      ? media.name
+      : media.file.replace(LOCAL_PATH + "/" + mediaFolder + "/", "").split("/")[0];
   if (!localFolder || localFolder.length < 2) throw Error(`Invalid media ${JSON.stringify(media)}`);
 
   const remotePath = REMOTE_PATH + "/" + mediaFolder + "/" + localFolder + "/";

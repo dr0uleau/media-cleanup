@@ -76,5 +76,3 @@ export class MovieManager implements MediaManager {
     return (await response.json()) as Movie[];
   }
 }
-
-console.log(await new MovieManager().getMediaNameToIdMap());
